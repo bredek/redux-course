@@ -1,0 +1,19 @@
+.list-group-item{
+
+}.list-group-item:hover{
+    cursor: pointer;
+}
+
+ .search-bar{
+     margin: 20px;
+     text-align: center;
+ }
+
+ .video-item{
+     max-width: 70px;
+ }
+
+ .video-detail .details{
+     margin-top: 10px;
+     padding: 10px;
+ }
