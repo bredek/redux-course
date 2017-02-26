@@ -42,6 +42,44 @@ const myStore = createStore(todoApp);
 
 
 let globalID = 0;
+
+const FilterLink = ({
+    filter,
+    children,
+    currentFilter
+}) => {
+    if(filter === currentFilter){
+        return <span>{children}</span>
+    }
+    return (
+        <a href="#"
+           onClick={(e) => {
+               e.preventDefault();
+               myStore.dispatch({
+                   type: 'SET_VISIBILITY_FILTER',
+                   filter
+               });
+           }}>
+            {children}
+        </a>
+    )
+};
+
+const getVisibleTodos = (todos,
+                         filter) => {
+    switch (filter) {
+        case 'SHOW_ALL':
+            return todos;
+        case 'SHOW_COMPLETED':
+            return todos.filter((todo) => {
+                return todo.completed;
+            });
+        case 'SHOW_ACTIVE':
+            return todos.filter((todo) => {
+                return !todo.completed;
+            })
+    }
+};
 class Todos extends Component {
     constructor(props) {
         super(props);
@@ -52,6 +90,12 @@ class Todos extends Component {
     }
 
     render() {
+        const todos = this.props.todos,
+            visibilityFilter = this.props.visibilityFilter,
+            visibleTodos = getVisibleTodos(
+                todos,
+                visibilityFilter
+            );
         return (
             <div className='col-md-8'>
                 <div className="btn-group">
@@ -75,44 +119,45 @@ class Todos extends Component {
                     </button>
                 </div>
                 <ul>
-                    {this.props.todos.map((todo) => {
+                    {visibleTodos.map((todo) => {
                         return (
-                             <li key={todo.id}
-                                 onClick={() => {
-                                     myStore.dispatch({
-                                         type: 'TOGGLE_TODO',
-                                         id: todo.id
-                                     });
-                                 }}
-                                 style = {
-                                     {
-                                         cursor: 'pointer',
-                                         textDecoration : todo.completed ? 'line-through' : 'none'
-                                     }
-                                 }>
-                                 {todo.text}
-                             </li>
+                            <li key={todo.id}
+                                onClick={() => {
+                                    myStore.dispatch({
+                                        type: 'TOGGLE_TODO',
+                                        id: todo.id
+                                    });
+                                }}
+                                style={
+                                    {
+                                        cursor: 'pointer',
+                                        textDecoration: todo.completed ? 'line-through' : 'none'
+                                    }
+                                }>
+                                {todo.text}
+                            </li>
                         )
                     })}
                 </ul>
+                <p>
+                    Show:
+                    {' '}
+                    <FilterLink filter="SHOW_ALL" currentFilter = {visibilityFilter}>
+                        ALL
+                    </FilterLink>
+                    {' '}
+                    <FilterLink filter="SHOW_ACTIVE" currentFilter = {visibilityFilter}>
+                        ACTIVE
+                    </FilterLink>
+                    {' '}
+                    <FilterLink filter="SHOW_COMPLETED" currentFilter = {visibilityFilter}>
+                        COMPLETED
+                    </FilterLink>
+                </p>
             </div>
         )
     }
 }
-
-// class Todo extends Component {
-//     constructor(props) {
-//         super(props);
-//     }
-//
-//     render() {
-//         return (
-//             <li key={this.props.todo.id}>
-//                 {this.props.todo.text}
-//             </li>
-//         )
-//     }
-// }
 
 class App extends Component {
     render() {
@@ -120,6 +165,7 @@ class App extends Component {
             <div>
                 <Todos
                     todos={myStore.getState().TodoReducer}
+                    visibilityFilter={myStore.getState().visibilityFilter}
                 />
             </div>
         )
