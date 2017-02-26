@@ -1,24 +1,4 @@
-// const toggleTodo = (todo) => {
-//     // bad --> return !todo.completed;
-
-//     // good
-//     // return {
-//     // 	id: todo.id,
-//     // 	text: todo.text,
-//     // 	completed: !todo.completed
-//     // }
-
-//     // better but need a polyphil
-//     // return Object.assign({}, todo, {
-//     // 	completed : !todo.completed
-//     // });
-
-//     // best needs babel stage2 preset
-//     return {
-//         ...todo,
-//         completed: !todo.completed
-//     }
-// }
+// Simple todoReducer
 const todo = (state, action) => {
     switch (action.type) {
         case 'ADD_TODO':
@@ -39,6 +19,7 @@ const todo = (state, action) => {
             return state;
     }
 };
+// A list of todoreduces. Using Composition with Arrays.
 const TodoReducer = (state = [], action) => {
     switch (action.type) {
         case 'ADD_TODO':
@@ -53,5 +34,40 @@ const TodoReducer = (state = [], action) => {
     }
 };
 
-export default TodoReducer;
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+    switch (action.type) {
+        case 'SET_VISIBILITY_FILTER':
+            return action.filter;
+        default:
+            return state;
+    }
+};
+
+// Luckily! We have combine reducer function
+// const todoApp = (state = {}, action) => {
+//   return {
+//       TodoReducer: TodoReducer(
+//           state.TodoReducer,
+//           action
+//       ),
+//       visibilityFilter: visibilityFilter(
+//           state.visibilityFilter,
+//           action
+//       )
+//   }
+// };
+
+const { combineReducers } = Redux;
+//
+// const todoApp = combineReducers({
+//     TodoReducer: TodoReducer,
+//     visibilityFilter: visibilityFilter
+// });
+// using ES6
+const todoApp = combineReducers({
+    TodoReducer,
+    visibilityFilter
+});
+
+export default todoApp;
 
