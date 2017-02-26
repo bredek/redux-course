@@ -70,13 +70,28 @@ class Todos extends Component {
                             id: globalID++,
                             text: this.textInput.value
                         });
+                        this.textInput.value = '';
                     }}>Add todo
                     </button>
                 </div>
                 <ul>
                     {this.props.todos.map((todo) => {
                         return (
-                            < Todo todo={todo}/>
+                             <li key={todo.id}
+                                 onClick={() => {
+                                     myStore.dispatch({
+                                         type: 'TOGGLE_TODO',
+                                         id: todo.id
+                                     });
+                                 }}
+                                 style = {
+                                     {
+                                         cursor: 'pointer',
+                                         textDecoration : todo.completed ? 'line-through' : 'none'
+                                     }
+                                 }>
+                                 {todo.text}
+                             </li>
                         )
                     })}
                 </ul>
@@ -85,37 +100,19 @@ class Todos extends Component {
     }
 }
 
-class Todo extends Component {
-    constructor(props) {
-        super(props);
-        let todo = props.todo;
-        this.state = {
-            toggleClass: '',
-            id: todo.id
-        }
-    }
-
-    render() {
-        return (
-            <li key={this.state.id}
-                className={this.state.toggleClass}
-                onClick={() => {
-                    myStore.dispatch({
-                        type: 'TOGGLE_TODO',
-                        id: this.state.id
-                    });
-                    this.setState({
-                            toggleClass: 'toggled'
-                        }
-                    );
-                }}>
-                <p>Todo#{this.state.id}</p>
-                <p>{"--> " + this.props.todo.text}</p>
-                <p>{this.props.todo.completed.toString()}</p>
-            </li>
-        )
-    }
-}
+// class Todo extends Component {
+//     constructor(props) {
+//         super(props);
+//     }
+//
+//     render() {
+//         return (
+//             <li key={this.props.todo.id}>
+//                 {this.props.todo.text}
+//             </li>
+//         )
+//     }
+// }
 
 class App extends Component {
     render() {
@@ -128,7 +125,6 @@ class App extends Component {
         )
     }
 }
-;
 
 
 const renderRedux = () => {
