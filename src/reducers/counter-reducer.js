@@ -1,5 +1,5 @@
 // ES6 view
-const CounterReducer = (state = 5, action) => {
+const CounterReducer = (state = 0, action) => {
     switch (action.type) {
         case 'INCREMENT':
             return state + 1;
