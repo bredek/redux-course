@@ -1,45 +1,16 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-// import CounterReducer from './reducers/counter-reducer';
+
+//  ToDo Component
+import ToDoList from './components/todolist'
+
+
 import todoApp from './reducers/todo-reducer';
 
 // Calling redux library
 const {createStore} = Redux;
 // conste createStore = Redux.createsore;
 const myStore = createStore(todoApp);
-//
-// console.dir(myStore.getState());
-//
-// myStore.dispatch({
-//     type: 'ADD_TODO',
-//     id: 0,
-//     text: 'Do something'
-// });
-//
-// console.dir(myStore.getState());
-//
-// myStore.dispatch({
-//     type: 'ADD_TODO',
-//     id: 1,
-//     text: 'Do another something'
-// });
-//
-// console.dir(myStore.getState());
-//
-// myStore.dispatch({
-//     type: 'TOGGLE_TODO',
-//     id: 0
-// });
-//
-// console.dir(myStore.getState());
-//
-// myStore.dispatch({
-//     type: 'SET_VISIBILITY_FILTER',
-//     filter: 'SHOW_COMPLETED'
-// });
-//
-// console.dir(myStore.getState());
-
 
 let globalID = 0;
 
@@ -118,27 +89,14 @@ class Todos extends Component {
                     }}>Add todo
                     </button>
                 </div>
-                <ul>
-                    {visibleTodos.map((todo) => {
-                        return (
-                            <li key={todo.id}
-                                onClick={() => {
-                                    myStore.dispatch({
-                                        type: 'TOGGLE_TODO',
-                                        id: todo.id
-                                    });
-                                }}
-                                style={
-                                    {
-                                        cursor: 'pointer',
-                                        textDecoration: todo.completed ? 'line-through' : 'none'
-                                    }
-                                }>
-                                {todo.text}
-                            </li>
-                        )
-                    })}
-                </ul>
+                <ToDoList
+                    todos = {visibleTodos}
+                    onToDoClick = {(id) => {
+                        myStore.dispatch({
+                            type: 'TOGGLE_TODO', id
+                        });
+                    }}
+                />
                 <p>
                     Show:
                     {' '}
